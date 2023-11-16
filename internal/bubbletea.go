@@ -97,9 +97,12 @@ func (m TeaModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-// TODO: Desplegar mensaje de bienvenida y decir que se procesa por línea
 func (m TeaModel) ViewOptions() string {
-	s := "¿Qué entrada desea usar?\n\n"
+	s := "Tokenizer hecho por Jan Reyes :3\n\n"
+	s += "Información de uso\n"
+	s += "- Este tokenizer esta hecho para el lenguaje XXX\n"
+	s += "- La entrada se procesa línea por línea\n"
+	s += "\n¿Qué entrada desea usar?\n\n"
 
 	for i, choice := range m.choices {
 		cursor := " "
