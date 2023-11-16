@@ -20,11 +20,12 @@ const (
 )
 
 type TeaModel struct {
-	choices  []string
-	cursor   int
-	phase    Phase
-	textarea textarea.Model
-	err      error
+	choices   []string
+	cursor    int
+	phase     Phase
+	textarea  textarea.Model
+	err       error
+	tokenizer Tokenizer
 }
 
 func (m TeaModel) Init() tea.Cmd {
@@ -69,7 +70,8 @@ func (m TeaModel) UpdateStd(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.textarea.Blur()
 			}
 		case tea.KeyCtrlC:
-			return m, tea.Quit
+			m.phase = ShowingResults
+			m.tokenizer.Tokenize(m.textarea.Value())
 		default:
 			if !m.textarea.Focused() {
 				cmd = m.textarea.Focus()
@@ -87,12 +89,25 @@ func (m TeaModel) UpdateStd(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
+func (m TeaModel) UpdateResults(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "ctrl+c", "q":
+			return m, tea.Quit
+		}
+	}
+	return m, nil
+}
+
 func (m TeaModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch m.phase {
 	case ReadingOptions:
 		return m.UpdateOptions(msg)
 	case ReadingStd:
 		return m.UpdateStd(msg)
+	case ShowingResults:
+		return m.UpdateResults(msg)
 	}
 	return m, nil
 }
@@ -113,17 +128,27 @@ func (m TeaModel) ViewOptions() string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress q to quit.\n"
+	s += "\nPresiona q para salir.\n"
 
 	return s
 }
 
 func (m TeaModel) ViewStd() string {
-	return fmt.Sprintf(
-		"Tell me a story.\n\n%s\n\n%s",
-		m.textarea.View(),
-		"(ctrl+c to quit)",
-	) + "\n\n"
+	s := "Ingresa el código a tokenizar\n\n"
+	s += m.textarea.View()
+	s += "\n\n(Ctrl+C para terminar)\n"
+
+	return s
+}
+
+func (m TeaModel) ViewResults() string {
+	s := "Resultados:\n\n"
+
+	for _, token := range m.tokenizer.Tokens {
+		s += fmt.Sprintf("%v\n", token)
+	}
+
+	return s
 }
 
 func (m TeaModel) View() string {
@@ -132,21 +157,28 @@ func (m TeaModel) View() string {
 		return m.ViewOptions()
 	case ReadingStd:
 		return m.ViewStd()
+	case ShowingResults:
+		return m.ViewResults()
 	}
 	return ""
 }
 
 func NewModel() TeaModel {
 	ti := textarea.New()
-	ti.Placeholder = "Ingresa el código a procesar"
+	ti.Placeholder = "Código a procesar"
+	ti.SetHeight(10)
+	ti.SetWidth(80)
+
+	tokenizer := NewTokenizer()
 
 	return TeaModel{
 		choices: []string{
 			"Leer desde consola",
 			"Leer desde un archivo",
 		},
-		phase:    ReadingOptions,
-		textarea: ti,
-		err:      nil,
+		phase:     ReadingOptions,
+		textarea:  ti,
+		err:       nil,
+		tokenizer: tokenizer,
 	}
 }

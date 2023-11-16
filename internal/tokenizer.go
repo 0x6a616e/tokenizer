@@ -1,6 +1,6 @@
 package internal
 
-import ()
+import "strings"
 
 type Token struct {
 	Type    string
@@ -11,20 +11,9 @@ type Tokenizer struct {
 	Tokens []Token
 }
 
-func (tokenizer *Tokenizer) Mockup() {
-	tokenizer.Tokens = []Token{
-		{
-			Type:    "Tipo 1",
-			Content: "Contenido 1",
-		},
-		{
-			Type:    "Tipo 2",
-			Content: "Contenido 2",
-		},
-		{
-			Type:    "Tipo 3",
-			Content: "Contenido 3",
-		},
+func (tokenizer *Tokenizer) Tokenize(s string) {
+	for _, t := range strings.Split(s, "\n") {
+		tokenizer.Tokens = append(tokenizer.Tokens, Token{"Tipo", t})
 	}
 }
 
