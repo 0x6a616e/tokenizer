@@ -98,7 +98,7 @@ func (m TeaModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m TeaModel) ViewOptions() string {
-	s := "Tokenizer hecho por Jan Reyes :3\n\n"
+	s := "Tokenizer :3\n\n"
 	s += "Información de uso\n"
 	s += "- Este tokenizer esta hecho para el lenguaje XXX\n"
 	s += "- La entrada se procesa línea por línea\n"
