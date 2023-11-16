@@ -12,7 +12,7 @@ type Tokenizer struct {
 }
 
 func (tokenizer *Tokenizer) Tokenize(s string) {
-	for _, t := range strings.Split(s, "\n") {
+	for _, t := range strings.Split(s, " ") {
 		tokenizer.Tokens = append(tokenizer.Tokens, Token{"Tipo", t})
 	}
 }

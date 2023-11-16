@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"
@@ -20,12 +21,12 @@ const (
 )
 
 type TeaModel struct {
-	choices   []string
-	cursor    int
-	phase     Phase
-	textarea  textarea.Model
-	err       error
-	tokenizer Tokenizer
+	choices    []string
+	cursor     int
+	phase      Phase
+	textarea   textarea.Model
+	err        error
+	tokenizers []Tokenizer
 }
 
 func (m TeaModel) Init() tea.Cmd {
@@ -71,7 +72,11 @@ func (m TeaModel) UpdateStd(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case tea.KeyCtrlC:
 			m.phase = ShowingResults
-			m.tokenizer.Tokenize(m.textarea.Value())
+			for _, line := range strings.Split(m.textarea.Value(), "\n") {
+				tokenizer := NewTokenizer()
+				tokenizer.Tokenize(line)
+				m.tokenizers = append(m.tokenizers, tokenizer)
+			}
 		default:
 			if !m.textarea.Focused() {
 				cmd = m.textarea.Focus()
@@ -144,8 +149,8 @@ func (m TeaModel) ViewStd() string {
 func (m TeaModel) ViewResults() string {
 	s := "Resultados:\n\n"
 
-	for _, token := range m.tokenizer.Tokens {
-		s += fmt.Sprintf("%v\n", token)
+	for _, tokenizer := range m.tokenizers {
+		s += fmt.Sprintf("%v\n", tokenizer)
 	}
 
 	return s
@@ -169,16 +174,13 @@ func NewModel() TeaModel {
 	ti.SetHeight(10)
 	ti.SetWidth(80)
 
-	tokenizer := NewTokenizer()
-
 	return TeaModel{
 		choices: []string{
 			"Leer desde consola",
 			"Leer desde un archivo",
 		},
-		phase:     ReadingOptions,
-		textarea:  ti,
-		err:       nil,
-		tokenizer: tokenizer,
+		phase:    ReadingOptions,
+		textarea: ti,
+		err:      nil,
 	}
 }

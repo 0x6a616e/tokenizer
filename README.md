@@ -5,6 +5,7 @@
 - Read from file
 - Tokenize
 - Show results
+- Add help?
 
 # Tokenizer
 
