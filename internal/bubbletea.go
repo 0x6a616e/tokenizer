@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"
@@ -20,10 +19,10 @@ const (
 )
 
 type TeaModel struct {
-	phase      Phase
-	textarea   textarea.Model
-	err        error
-	tokenizers []Tokenizer
+	phase     Phase
+	textarea  textarea.Model
+	err       error
+	tokenizer Tokenizer
 }
 
 func (m TeaModel) Init() tea.Cmd {
@@ -58,11 +57,7 @@ func (m TeaModel) UpdateInput(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case tea.KeyCtrlC:
 			m.phase = ShowingResults
-			for _, line := range strings.Split(m.textarea.Value(), "\n") {
-				tokenizer := NewTokenizer()
-				tokenizer.Tokenize(line)
-				m.tokenizers = append(m.tokenizers, tokenizer)
-			}
+			m.tokenizer.Tokenize(m.textarea.Value())
 		default:
 			if !m.textarea.Focused() {
 				cmd = m.textarea.Focus()
@@ -126,10 +121,7 @@ func (m TeaModel) ViewInput() string {
 
 func (m TeaModel) ViewResults() string {
 	s := "Resultados:\n\n"
-
-	for _, tokenizer := range m.tokenizers {
-		s += fmt.Sprintf("%v\n", tokenizer)
-	}
+	s += fmt.Sprintf("%v\n", m.tokenizer)
 
 	return s
 }

@@ -29,8 +29,8 @@ looking:
 }
 
 func (tokenizer *Tokenizer) Tokenize(s string) {
-	for token, remainder := shiftToken(s); token != ""; token, remainder = shiftToken(remainder) {
-		tokenizer.Tokens = append(tokenizer.Tokens, Token{"Tipo 1", token})
+	for t, r := shiftToken(s); t != ""; t, r = shiftToken(r) {
+		tokenizer.Tokens = append(tokenizer.Tokens, Token{"Tipo 1", t})
 	}
 }
 
