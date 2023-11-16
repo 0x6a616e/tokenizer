@@ -14,15 +14,12 @@ type (
 )
 
 const (
-	ReadingOptions Phase = iota
-	ReadingStd
-	ReadingFile
+	ShowingWelcome Phase = iota
+	ReadingInput
 	ShowingResults
 )
 
 type TeaModel struct {
-	choices    []string
-	cursor     int
 	phase      Phase
 	textarea   textarea.Model
 	err        error
@@ -33,33 +30,22 @@ func (m TeaModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m TeaModel) UpdateOptions(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m TeaModel) UpdateWelcome(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
-		case "up", "k":
-			if m.cursor > 0 {
-				m.cursor--
-			}
-		case "down", "j":
-			if m.cursor < len(m.choices)-1 {
-				m.cursor++
-			}
 		case "enter", " ":
-			m.phase = Phase(m.cursor) + 1
-			switch m.phase {
-			case ReadingStd:
-				m.textarea.Focus()
-				return m, textarea.Blink
-			}
+			m.phase = ReadingInput
+			m.textarea.Focus()
+			return m, textarea.Blink
 		}
 	}
 	return m, nil
 }
 
-func (m TeaModel) UpdateStd(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m TeaModel) UpdateInput(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 	var cmd tea.Cmd
 
@@ -107,38 +93,30 @@ func (m TeaModel) UpdateResults(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m TeaModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch m.phase {
-	case ReadingOptions:
-		return m.UpdateOptions(msg)
-	case ReadingStd:
-		return m.UpdateStd(msg)
+	case ShowingWelcome:
+		return m.UpdateWelcome(msg)
+	case ReadingInput:
+		return m.UpdateInput(msg)
 	case ShowingResults:
 		return m.UpdateResults(msg)
 	}
 	return m, nil
 }
 
-func (m TeaModel) ViewOptions() string {
-	s := "Tokenizer :3\n\n"
+func (m TeaModel) ViewWelcome() string {
+	s := "Tokenizer :3\n"
+	s += "\n"
 	s += "Información de uso\n"
 	s += "- Este tokenizer esta hecho para el lenguaje XXX\n"
 	s += "- La entrada se procesa línea por línea\n"
-	s += "\n¿Qué entrada desea usar?\n\n"
-
-	for i, choice := range m.choices {
-		cursor := " "
-		if m.cursor == i {
-			cursor = ">"
-		}
-
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPresiona q para salir.\n"
+	s += "\n"
+	s += "Presiona Enter para iniciar\n"
+	s += "Presiona q para salir.\n"
 
 	return s
 }
 
-func (m TeaModel) ViewStd() string {
+func (m TeaModel) ViewInput() string {
 	s := "Ingresa el código a tokenizar\n\n"
 	s += m.textarea.View()
 	s += "\n\n(Ctrl+C para terminar)\n"
@@ -158,10 +136,10 @@ func (m TeaModel) ViewResults() string {
 
 func (m TeaModel) View() string {
 	switch m.phase {
-	case ReadingOptions:
-		return m.ViewOptions()
-	case ReadingStd:
-		return m.ViewStd()
+	case ShowingWelcome:
+		return m.ViewWelcome()
+	case ReadingInput:
+		return m.ViewInput()
 	case ShowingResults:
 		return m.ViewResults()
 	}
@@ -175,11 +153,7 @@ func NewModel() TeaModel {
 	ti.SetWidth(80)
 
 	return TeaModel{
-		choices: []string{
-			"Leer desde consola",
-			"Leer desde un archivo",
-		},
-		phase:    ReadingOptions,
+		phase:    ShowingWelcome,
 		textarea: ti,
 		err:      nil,
 	}

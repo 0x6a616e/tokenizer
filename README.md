@@ -1,11 +1,9 @@
 # Todo
 
-- Read from textarea
-- Implement file selector
-- Read from file
 - Tokenize
 - Show results
-- Add help?
+- Make it repeatable
+- Add help
 
 # Tokenizer
 
