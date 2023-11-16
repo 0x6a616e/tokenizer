@@ -1,3 +1,11 @@
+# Todo
+
+- Read from textarea
+- Implement file selector
+- Read from file
+- Tokenize
+- Show results
+
 # Tokenizer
 
 This is my final project for my automata theory class.
