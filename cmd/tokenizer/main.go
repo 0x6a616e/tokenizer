@@ -4,8 +4,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/0x6a616e/tokenizer/internal"
 	tea "github.com/charmbracelet/bubbletea"
+
+	"github.com/0x6a616e/tokenizer/internal"
 )
 
 func main() {
