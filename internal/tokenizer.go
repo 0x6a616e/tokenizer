@@ -1,9 +1,13 @@
 package internal
 
-import ()
+type TokenType int
+
+const (
+	Undefined TokenType = iota
+)
 
 type Token struct {
-	Type    string
+	Type    TokenType
 	Content string
 }
 
@@ -30,7 +34,7 @@ looking:
 
 func (tokenizer *Tokenizer) Tokenize(s string) {
 	for t, r := shiftToken(s); t != ""; t, r = shiftToken(r) {
-		tokenizer.Tokens = append(tokenizer.Tokens, Token{"Tipo 1", t})
+		tokenizer.Tokens = append(tokenizer.Tokens, Token{Undefined, t})
 	}
 }
 
