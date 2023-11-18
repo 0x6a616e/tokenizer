@@ -1,5 +1,10 @@
 package internal
 
+import (
+	"fmt"
+	"strings"
+)
+
 type TokenType int
 
 const (
@@ -16,11 +21,12 @@ type Tokenizer struct {
 }
 
 func shiftToken(s string) (token, remainder string) {
+	s = strings.TrimSpace(s)
 	splitIndex := -1
 looking:
 	for i, ch := range s {
 		switch string(ch) {
-		case " ", "\n":
+		case " ", "\n", ";":
 			splitIndex = i
 			break looking
 		}
@@ -33,6 +39,7 @@ looking:
 }
 
 func (tokenizer *Tokenizer) Tokenize(s string) {
+	fmt.Println(Undefined == TokenType(ShowingWelcome))
 	for t, r := shiftToken(s); t != ""; t, r = shiftToken(r) {
 		tokenizer.Tokens = append(tokenizer.Tokens, Token{Undefined, t})
 	}
