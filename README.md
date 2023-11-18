@@ -3,6 +3,8 @@
 - Tokenize
 - Make it repeatable
 - Add help
+- Add requirements for running
+- Specify better the running process
 
 # Tokenizer
 
