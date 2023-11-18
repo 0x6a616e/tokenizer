@@ -8,6 +8,11 @@ type TokenType int
 
 const (
 	Undefined TokenType = iota
+	Identifier
+	Keyword
+	Operator
+	Literal
+	Invalid
 )
 
 type Token struct {
@@ -41,6 +46,12 @@ looking:
 func (tokenizer *Tokenizer) Tokenize(s string) {
 	for t, r := shiftToken(s); t != ""; t, r = shiftToken(r) {
 		tokenizer.Tokens = append(tokenizer.Tokens, Token{Undefined, t})
+	}
+
+	var automata Automata
+	for i, t := range tokenizer.Tokens {
+		automata.state = q0
+		tokenizer.Tokens[i].Type = automata.Analyze(t.Content)
 	}
 }
 

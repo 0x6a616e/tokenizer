@@ -63,6 +63,16 @@ func (m *TeaModel) MakeTable() {
 		switch t.Type {
 		case Undefined:
 			row = table.Row{"X", "Indefinido", t.Content}
+		case Identifier:
+			row = table.Row{"O", "Identificador", t.Content}
+		case Keyword:
+			row = table.Row{"O", "Reservada", t.Content}
+		case Operator:
+			row = table.Row{"O", "Operador", t.Content}
+		case Literal:
+			row = table.Row{"O", "Literal", t.Content}
+		case Invalid:
+			row = table.Row{"X", "Inválido", t.Content}
 		}
 		r = append(r, row)
 		c[0].Width = int(math.Max(float64(c[0].Width), float64(len(row[0]))))
@@ -135,7 +145,7 @@ func (m TeaModel) ViewWelcome() string {
 	s := "Tokenizer :3\n"
 	s += "\n"
 	s += "Información de uso\n"
-	s += "- Este tokenizer esta hecho para el lenguaje XXX\n"
+	s += "- Este tokenizer esta hecho para el lenguaje C\n"
 	s += "- La entrada se procesa línea por línea\n"
 	s += "\n"
 	s += "Presiona Enter para iniciar\n"
