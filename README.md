@@ -1,10 +1,10 @@
 # Todo
 
-- Tokenize
 - Make it repeatable
 - Add help
 - Add requirements for running
 - Specify better the running process
+- Doc whole project
 
 # Tokenizer
 
@@ -20,14 +20,12 @@ Keyword
 : An identifier that appears in a defined list of keywords
 
 Operator
-: Any of the following operators (+-/*&|^!<>%=), they can optionally be followed
-by an equal sign (=)
+: Any of the following operators (+-/*&|^!<>%=)
 
 Literal
 : For a string literal it is any string that starts and ends with quotation
-marks ("). For number literals it can start with a sign (+-), then any amount of
-numbers (0-9), then optionally a dot (.) with more numbers, finally it can have
-a letter (f).
+marks ("). For number literals it is any amount of numbers (0-9), then
+optionally a dot (.) with more numbers
 
 # Usage
 

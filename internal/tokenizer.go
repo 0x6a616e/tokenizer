@@ -11,7 +11,9 @@ const (
 	Identifier
 	Keyword
 	Operator
-	Literal
+	StringLiteral
+	IntegerLiteral
+	DecimalLiteral
 	Invalid
 )
 
@@ -50,7 +52,6 @@ func (tokenizer *Tokenizer) Tokenize(s string) {
 
 	var automata Automata
 	for i, t := range tokenizer.Tokens {
-		automata.state = q0
 		tokenizer.Tokens[i].Type = automata.Analyze(t.Content)
 	}
 }

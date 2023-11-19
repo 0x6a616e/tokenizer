@@ -69,8 +69,12 @@ func (m *TeaModel) MakeTable() {
 			row = table.Row{"O", "Reservada", t.Content}
 		case Operator:
 			row = table.Row{"O", "Operador", t.Content}
-		case Literal:
-			row = table.Row{"O", "Literal", t.Content}
+		case StringLiteral:
+			row = table.Row{"O", "Cadena literal", t.Content}
+		case IntegerLiteral:
+			row = table.Row{"O", "Entero literal", t.Content}
+		case DecimalLiteral:
+			row = table.Row{"O", "Decimal literal", t.Content}
 		case Invalid:
 			row = table.Row{"X", "Inválido", t.Content}
 		}
