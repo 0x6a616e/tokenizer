@@ -55,8 +55,3 @@ func (tokenizer *Tokenizer) Tokenize(s string) {
 		tokenizer.Tokens[i].Type = automata.Analyze(t.Content)
 	}
 }
-
-func NewTokenizer() Tokenizer {
-	t := Tokenizer{}
-	return t
-}
