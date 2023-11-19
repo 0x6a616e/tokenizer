@@ -1,6 +1,5 @@
 # Todo
 
-- Add help
 - Add requirements for running
 - Specify better the running process
 - Doc whole project

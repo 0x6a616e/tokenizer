@@ -40,9 +40,9 @@ func (m TeaModel) UpdateWelcome(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "ctrl+c", "q":
+		case "ctrl+c":
 			return m, tea.Quit
-		case "enter", " ":
+		case "enter":
 			m.phase = ReadingInput
 			m.textarea.Focus()
 			return m, textarea.Blink
@@ -125,12 +125,12 @@ func (m TeaModel) UpdateResults(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "enter", " ":
+		case "enter":
 			m.phase = ShowingWelcome
 			m.textarea.SetValue("")
 			m.err = nil
 			m.tokenizer = Tokenizer{}
-		case "q", "ctrl+c":
+		case "ctrl+c":
 			return m, tea.Quit
 		}
 	}
@@ -154,11 +154,12 @@ func (m TeaModel) ViewWelcome() string {
 	s := "Tokenizer :3\n"
 	s += "\n"
 	s += "Información de uso\n"
-	s += "- Este tokenizer esta hecho para el lenguaje C\n"
-	s += "- La entrada se procesa línea por línea\n"
+	s += "- Este tokenizer esta hecho para el lenguaje Go\n"
+	s += "- Solo reconoce un subconjunto de los tokens que Go puede reconocer\n"
+	s += "- Cada token se separa por un espacio ( ), un punto y coma (;) o un salto de línea\n"
 	s += "\n"
-	s += "Presiona Enter para iniciar\n"
-	s += "Presiona q para salir.\n"
+	s += "(Enter para iniciar)\n"
+	s += "(Ctrl+C para salir)\n"
 
 	return s
 }
@@ -168,7 +169,7 @@ func (m TeaModel) ViewInput() string {
 	s += "\n"
 	s += m.textarea.View() + "\n"
 	s += "\n"
-	s += "(Ctrl+C para terminar)\n"
+	s += "(Ctrl+C para terminar de leer)\n"
 
 	return s
 }
@@ -177,6 +178,10 @@ func (m TeaModel) ViewResults() string {
 	s := "Tokens:\n"
 	s += "\n"
 	s += baseStyle.Render(m.table.View()) + "\n"
+	s += "\n"
+	s += "(Flecha arriba/abajo para desplazarse)\n"
+	s += "(Enter para volver al inicio)\n"
+	s += "(Ctrl+C para terminar el programa)\n"
 
 	return s
 }
