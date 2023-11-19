@@ -1,7 +1,6 @@
 package internal
 
-type State int
-
+// Making a set of all the letters
 var alphabet = map[string]bool{
 	"a": true,
 	"b": true,
@@ -57,6 +56,7 @@ var alphabet = map[string]bool{
 	"Z": true,
 }
 
+// A set of numbers
 var numbers = map[string]bool{
 	"0": true,
 	"1": true,
@@ -70,6 +70,7 @@ var numbers = map[string]bool{
 	"9": true,
 }
 
+// A set of accepted operators
 var operators = map[string]bool{
 	"+": true,
 	"-": true,
@@ -85,6 +86,7 @@ var operators = map[string]bool{
 	"=": true,
 }
 
+// A set of valid keywords
 var keywords = map[string]bool{
 	"var":        true,
 	"const":      true,
@@ -111,6 +113,9 @@ var keywords = map[string]bool{
 	"complex128": true,
 }
 
+type State int
+
+// Enum for the states of the automata
 const (
 	q0 State = iota
 	qIdentifier
@@ -123,90 +128,126 @@ const (
 	qInvalid
 )
 
+// Struct for the automata, it only has its current state
 type Automata struct {
 	state State
 }
 
 func (automata *Automata) Transform(character string) {
+	// Based on the current state it should act differently
 	switch automata.state {
 	case q0:
+		// This switch acts as an if else chain for the received character
 		switch {
+		// If it's letter or an underscore
 		case alphabet[character] || character == "_":
 			automata.state = qIdentifier
+		// If it's an operator
 		case operators[character]:
 			automata.state = qOperator
+		// If it's a quotation mark
 		case character == "\"":
 			automata.state = qIncompleteString
+		// If it's a number
 		case numbers[character]:
 			automata.state = qIntegerLiteral
+		// Anything else
 		default:
 			automata.state = qInvalid
 		}
 	case qIdentifier:
+		// This switch acts as an if else chain for the received character
 		switch {
+		// If it's letter or an underscore
 		case alphabet[character] || character == "_":
 			automata.state = qIdentifier
+		// If it's a number
 		case numbers[character]:
 			automata.state = qIdentifier
+		// Anything else
 		default:
 			automata.state = qInvalid
 		}
 	case qOperator:
+		// This switch acts as an if else chain for the received character
 		switch {
+		// Anything else
 		default:
 			automata.state = qInvalid
 		}
 	case qIncompleteString:
+		// This switch acts as an if else chain for the received character
 		switch {
+		// If it's a quotation mark
 		case character == "\"":
 			automata.state = qStringLiteral
+		// Anything else
 		default:
 			automata.state = qIncompleteString
 		}
 	case qStringLiteral:
+		// This switch acts as an if else chain for the received character
 		switch {
+		// Anything else
 		default:
 			automata.state = qInvalid
 		}
 	case qIntegerLiteral:
+		// This switch acts as an if else chain for the received character
 		switch {
+		// If it's a number
 		case numbers[character]:
 			automata.state = qIntegerLiteral
+		// If it's a dot
 		case character == ".":
 			automata.state = qIntToDec
+		// Anything else
 		default:
 			automata.state = qInvalid
 		}
 	case qIntToDec:
+		// This switch acts as an if else chain for the received character
 		switch {
+		// If it's a number
 		case numbers[character]:
 			automata.state = qDecimalLiteral
+		// Anything else
 		default:
 			automata.state = qInvalid
 		}
 	case qDecimalLiteral:
+		// This switch acts as an if else chain for the received character
 		switch {
+		// If it's a number
 		case numbers[character]:
 			automata.state = qDecimalLiteral
+		// Anything else
 		default:
 			automata.state = qInvalid
 		}
 	case qInvalid:
+		// This switch acts as an if else chain for the received character
 		switch {
+		// Anything else
 		default:
 			automata.state = qInvalid
 		}
 	}
 }
 
+// This classifies a token based on its content
 func (automata *Automata) Analyze(s string) TokenType {
+	// Initial state
 	automata.state = q0
+	// For each character the automata checks for transformations
 	for _, ch := range s {
 		automata.Transform(string(ch))
 	}
 
+	// Based on the final state it returns a token type
 	switch automata.state {
 	case qIdentifier:
+		// If is an identifier and is in the list of keywords
 		if keywords[s] {
 			return Keyword
 		}

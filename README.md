@@ -1,10 +1,24 @@
-# Todo
-
-- Doc whole project
-
 # Tokenizer
 
 This is my final project for my automata theory class.
+
+# File distribution
+
+cmd/tokenizer/main.go
+: It's the file where the execution begins, it is almost empty as it only starts
+the program defined in other files
+
+internal/bubbletea.go
+: It includes all the logic for the BubbleTea framework that creates the
+CLI
+
+internal/tokenizer.go
+: It includes the logic of the tokenizer, its job is to split the tokens and
+save them, the classification parts does not go in here
+
+internal/automata.go
+: It includes the automata implementation, its job is to receive a token and
+classify it using a deterministic finite automaton
 
 # Tokens it recognizes
 
@@ -44,13 +58,13 @@ Requirements:
 make clean
 ~~~
 
-1. Compile program
+2. Compile program
 
 ~~~bash
 make
 ~~~
 
-1. Execute binary (they are saved in the *bin* folder)
+3. Execute binary (they are saved in the *bin* folder)
 
 ### Without compiling
 
