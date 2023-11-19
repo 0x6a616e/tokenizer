@@ -41,12 +41,31 @@ func shiftToken(s string) (token, remainder string) {
 	s = strings.TrimSpace(s)
 	splitIndex := -1
 
+	if len(s) == 0 {
+		return "", ""
+	}
+
 looking:
-	for i, ch := range s {
-		switch string(ch) {
-		case " ", "\n", ";":
-			splitIndex = i
-			break looking
+	switch s[0] {
+	case '"':
+		for i, ch := range s[1:] {
+			switch string(ch) {
+			case "\n":
+				splitIndex = i
+				break looking
+			case "\"":
+				splitIndex = i + 2
+				s = s[:splitIndex] + " " + s[splitIndex:]
+				break looking
+			}
+		}
+	default:
+		for i, ch := range s {
+			switch string(ch) {
+			case " ", "\n", ";":
+				splitIndex = i
+				break looking
+			}
 		}
 	}
 
