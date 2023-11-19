@@ -1,7 +1,5 @@
 # Todo
 
-- Add requirements for running
-- Specify better the running process
 - Doc whole project
 
 # Tokenizer
@@ -27,22 +25,39 @@ optionally a dot (.) with more numbers
 
 # Usage
 
-1. Compile
+## Pregenerated binaries
+
+There are already three pregenerated binaries in the *bin* folder for the three
+main operating systems.
+
+## From source
+
+Requirements:
+- Go (version >= 1.20)
+- Make (just for the compilation case)
+
+### Compiling
+
+1. Clean bin directory
+
+~~~bash
+make clean
+~~~
+
+1. Compile program
 
 ~~~bash
 make
 ~~~
 
-2. Execute binary (according to OS)
+1. Execute binary (they are saved in the *bin* folder)
+
+### Without compiling
+
+1. Run the program from the main directory
 
 ~~~bash
-./tokenizer-linux
-~~~
-
-It is also possible to run without compiling by running
-
-~~~bash
-go run .
+go run cmd/tokenizer/main.go
 ~~~
 
 ---
