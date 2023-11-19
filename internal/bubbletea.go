@@ -125,6 +125,11 @@ func (m TeaModel) UpdateResults(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
+		case "enter", " ":
+			m.phase = ShowingWelcome
+			m.textarea.SetValue("")
+			m.err = nil
+			m.tokenizer = Tokenizer{}
 		case "q", "ctrl+c":
 			return m, tea.Quit
 		}
